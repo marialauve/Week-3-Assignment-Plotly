@@ -1,0 +1,35 @@
+---
+title: "Week 3 Assignment: Plotly"
+author: "Maria Lauve"
+date: "August 23, 2017"
+output: ioslides_presentation
+---
+
+## My plotly
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(plotly)
+
+# Create data frame
+state_life <- data.frame(State = state.abb, Life = as.vector(state.x77[,4]))
+
+# Create hover text
+state_life$hover <- with(state_life, paste(State, '<br>', "Life Expectancy:", Life))
+
+# Make state borders red
+borders <- list(color = toRGB("black"))
+
+# Set up some mapping options
+map_options <- list(
+    scope = 'usa',
+    projection = list(type = 'albers usa'),
+    showlakes = TRUE,
+    lakecolor = toRGB('blue')
+)
+
+plot_ly(z = ~state_life$Life, text = ~state_life$hover, locations = ~state_life$State, 
+        type = 'choropleth', locationmode = 'USA-states', 
+        color = state_life$Life, colors = 'Greens', marker = list(line = borders)) %>%
+    layout(title = 'US Life Expectancy in 1975', geo = map_options)
+
+```
